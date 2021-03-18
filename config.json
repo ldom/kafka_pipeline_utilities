@@ -1,0 +1,10 @@
+{
+  "sasl.mechanisms": "GSSAPI",
+  "security.protocol": "SASL_SSL",
+  "group.id": "kafka_utilities_pipeline",
+  "sasl.kerberos.principal": "xqkfkkfkusr001@RND.PNCINT.NET",
+  "ssl.ca.location": "/home/pnc-ca-bundle.pem",
+  "sasl.kerberos.kinit.cmd": "kinit -kt '/keytabs/kfk-all.keytab' 'xqkfkkfkusr001@RND.PNCINT.NET'",
+  "sasl.kerberos.keytab": "/keytabs/kfk-all.keytab",
+  "sasl.kerberos.service.name": "kafka"
+}
