@@ -1,4 +1,5 @@
 import argparse
+import os
 
 from confluent_kafka.admin import AdminClient
 
@@ -15,15 +16,19 @@ example input JSON
 {
     'version': 17,
     'environment': 'RND',
-    'recreates': [
-        'aaa',
-        'bbb'
-    ]
+    'datacenter': 'GF1',
+    'commands': {
+        'recreates': [
+            'aaa',
+            'bbb'
+        ]
+    }
 }
 """
 
 JSON_INPUT_UID = "version"
 JSON_INPUT_ENV = "environment"
+JSON_INPUT_DATACENTER = "datacenter"
 JSON_INPUT_COMMANDS = "commands"
 JSON_INPUT_RECREATE_TOPICS = "recreates"
 
@@ -36,8 +41,8 @@ def handle_arguments():
     parser.add_argument("actions",
                         help="JSON input file to specify what to do.")
 
-    parser.add_argument("clusterconfig",
-                        help="JSON input file with cluster bootstrap-servers, etc.")
+    # parser.add_argument("clusterconfig",
+    #                     help="JSON input file with cluster bootstrap-servers, etc.")
 
     # parser.add_argument("-c", "--config", help="Config properties for connecting to the cluster, in JSON format. "
     #                                            "Minimum = '{ \"bootstrap.servers\": \"<ip-or-dns-name>:9092\" }'", 
@@ -47,6 +52,12 @@ def handle_arguments():
 
 
 def main():
+    mnemonic = os.environ.get('MNEMONIC')
+    if mnemonic == None:
+        raise Exception('Environment MNEMONIC must be defined.')
+
+    mnemonic = mnemonic.lower().strip()
+
     # get the command line arguments
     args = handle_arguments()
 
@@ -57,7 +68,7 @@ def main():
     cluster_config = read_json_input(args.clusterconfig)
     print(cluster_config)
 
-    bootstrap = cluster_config[actions['environment']]
+    bootstrap = cluster_config[mnemonic][actions['environment']]
 
     ####################################################################################################
     # client options
